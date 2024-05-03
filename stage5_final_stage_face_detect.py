@@ -1,5 +1,10 @@
+# REQUIRED LIBRARIES
+
+# Importing the load_model function from the Keras library
 from keras.models import load_model
+# Importing the OpenCV library for computer vision tasks
 import cv2
+# For numerical operations
 import numpy as np
 
 
@@ -15,10 +20,12 @@ if not cap.isOpened():
     exit()
 
 # Import cascade file for facial recognition.
-face_clsfr = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+face_clsfr = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 # Import cascade file for smile recognition.
-smile_clsfr = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_smile.xml")
+smile_clsfr = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_smile.xml")
 
 # Dictionary to map labels to your friends' names
 labels_dict = {0: 'Iryna', 1: 'It\'s_Me', 2: 'Serhiy',
@@ -31,7 +38,7 @@ color_dict = {1: (0, 255, 0)}  # Green color assigned for label 1 (It's_Me)
 
 # for label in range(0, 6):      # Iterating over labels 0 to 5
 #     if label != 1:  # Check if the label is not 1
-#         color_dict[label] = (255, 0, 0)  # Assign blue color for labels other than 1
+#  color_dict[label] = (255, 0, 0)  # Assign blue color for labels other than 1
 
 # Iterate over labels 0 to 6
 for label in range(0, 6):
@@ -47,7 +54,8 @@ rect_size = 4
 
 # Define the codec and create VideoWriter object.
 # The output is stored in 'output.avi' file.
-out = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (640, 480))
+out = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'),
+                      10, (640, 480))
 
 # Main loop for capturing video and performing face detection
 while True:
@@ -74,7 +82,8 @@ while True:
 
         # Draw bounding box around the face and display label
         cv2.rectangle(img, (x, y), (x+w, y+h), color_dict[label], rect_size)
-        cv2.putText(img, labels_dict[label], (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color_dict[label], 2)
+        cv2.putText(img, labels_dict[label], (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, color_dict[label], 2)
 
         # Detect smiles within the face region
         smiles = smile_clsfr.detectMultiScale(face_img, scaleFactor=1.8,
@@ -103,7 +112,7 @@ while True:
     # Write the frame to the output video file
     out.write(img)
 
-    # Check for the 'Esc' key to exit he loop
+    # Check for the 'Esc' key to exit the loop
     key = cv2.waitKey(1)
     if key == 27:  # ASCII value for Esc key / Ctrl+C
         break
