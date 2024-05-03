@@ -56,8 +56,8 @@ def create_cnn_model(input_shape):
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     # HIDDEN LAYERS:
-    # This layer flattens the 3D output from the previous layer into a 1D vector,
-    # repairing it for the dense layers
+    # This layer flattens the 3D output from the previous layer
+    # into a 1D vector, repairing it for the dense layers
     model.add(Flatten())
     # Adding a dropout layer with a dropout rate of 0.5 to prevent overfitting
     model.add(Dropout(0.5))
