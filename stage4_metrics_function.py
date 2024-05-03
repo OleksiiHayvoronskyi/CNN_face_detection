@@ -1,10 +1,14 @@
 # REQUIRED LIBRARIES
 
-# For metrics functions
+# For numerical operations
 import numpy as np
+# For computing classification metrics
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+# For computing additional classification metrics
 from sklearn.metrics import f1_score, roc_auc_score
+# For data visualization
 import matplotlib.pyplot as plt
+# For evaluating classification performance
 from sklearn.metrics import confusion_matrix, classification_report
 
 
@@ -19,10 +23,12 @@ def compute_metrics_and_visualizations(model, X_test, y_test, history):
 
     # Calculate evaluation metrics
     accuracy = accuracy_score(true_labels, predicted_labels)
-    precision = precision_score(true_labels, predicted_labels, average='weighted', zero_division=0)
+    precision = precision_score(true_labels, predicted_labels,
+                                average='weighted', zero_division=0)
     recall = recall_score(true_labels, predicted_labels, average='weighted')
     f1 = f1_score(true_labels, predicted_labels, average='weighted')
-    roc_auc = roc_auc_score(y_test, predictions, average='weighted', multi_class='ovr')
+    roc_auc = roc_auc_score(y_test, predictions, average='weighted',
+                            multi_class='ovr')
 
     # Print metrics
     print(f"\nAccuracy: {accuracy:.3f}")
@@ -36,14 +42,16 @@ def compute_metrics_and_visualizations(model, X_test, y_test, history):
     metrics_values = [accuracy, precision, recall, f1, roc_auc]
 
     fig, ax = plt.subplots(figsize=(9, 7))
-    bars = ax.bar(metrics_names, metrics_values, color=['blue', 'green', 'orange', 'red', 'purple'])
+    bars = ax.bar(metrics_names, metrics_values,
+                  color=['blue', 'green', 'orange', 'red', 'purple'])
     ax.set_xlabel('Metrics', color='navy', size=12)
     ax.set_ylabel('Values', color='navy', size=12)
     ax.set_title('Performance Metrics after training', color='navy', size=14)
     ax.set_ylim([0, 1])
 
     for bar, value in zip(bars, metrics_values):
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() / 2, f'{value:.3f}',
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() / 2,
+                f'{value:.3f}',
                 ha='center', va='center', color='white', fontweight='bold')
 
     plt.show()
