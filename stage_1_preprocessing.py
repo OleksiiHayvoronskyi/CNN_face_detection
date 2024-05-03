@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 # For tensor-based operations
 from tensorflow.keras.utils import to_categorical, normalize
 
-
 # BLOCK OF SCRIPT
 
 # Provide the path to the dataset
