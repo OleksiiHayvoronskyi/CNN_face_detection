@@ -39,7 +39,7 @@ def load_data():
 
 
 # Train the model
-def train_model(model, X_train, y_train):
+def train_model(model, X_train, y_train, X_val, y_val):
     # Define callbacks for model training and saving the best model
     checkpoint = ModelCheckpoint(
         # Save model weights with epoch number
@@ -61,7 +61,7 @@ def train_model(model, X_train, y_train):
         monitor='val_loss',  # Monitor validation loss
         patience=10,  # Number of epochs with no improvement before stopping
         verbose=1,    # Display verbose output
-        restore_best_weights=True  # Restore weights of the best perform. model
+        restore_best_weights=True  # Restore weights of the best perform model
     )
 
     # To control learning rate during training
@@ -84,11 +84,6 @@ def train_model(model, X_train, y_train):
         write_graph=True,  # Writing the computation graph to the log files
         write_images=True  # Writing the model weights as images
     )
-
-    # Splitting the data into train and validation sets for data augmentation
-    X_train, X_val, y_train, y_val = train_test_split(data, target,
-                                                      test_size=0.3,
-                                                      random_state=42)
 
     # Data augmentation parameters
     datagen = ImageDataGenerator(
@@ -134,16 +129,29 @@ if __name__ == "__main__":
     # Load data
     data, target = load_data()
 
-    # Split the data into train and test sets
+    # This splits the entire dataset into training and testing sets:
+    # Training Set: 80% of data; Test Set: 20% of data
     X_train, X_test, y_train, y_test = train_test_split(data, target,
                                                         test_size=0.2,
                                                         random_state=42)
+
+    # This splits the training set into a smaller training and validation sets:
+    # Training Set: 70% of original data (which is 70% of 80% = 56%)
+    # Validation Set: 30% of original training data (which is 30% of 80% = 24%)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
+                                                      test_size=0.3,
+                                                      random_state=42)
+
+    # By performing these two splits, I achieve the following distribution:
+    # Training Set: 70% of the original data (X_train, y_train)
+    # Validation Set: 24% of the original data (X_val, y_val)
+    # Test Set: 20% of the original data (X_test, y_test)
 
     # Create the CNN model
     model = create_cnn_model(X_train.shape[1:])
 
     # Train the model and get the training history
-    history = train_model(model, X_train, y_train)
+    history = train_model(model, X_train, y_train, X_val, y_val)
 
     # Compute metrics and visualize
     compute_metrics_and_visualizations(model, X_test, y_test, history)
