@@ -31,7 +31,8 @@ def load_data():
     # Load the numpy arrays containing the data and target
     data = np.load('data.npy')
     target = np.load('target.npy')
-    # Shape of the images
+    # Extracts the shape of a single image
+    # which includes the dimensions and the number of color channels
     image_shape = data.shape[1:]
     print('\nImages shape:', image_shape)
 
@@ -100,7 +101,13 @@ def train_model(model, X_train, y_train, X_val, y_val):
         # Randomly flip the input images horizontally
         horizontal_flip=True,
         # Strategy to fill in missing pixels after applying transformations
-        fill_mode='nearest'
+        fill_mode='nearest',
+        # -------------------------------------------------------------------
+        # Images will have their brightness randomly adjusted within this range
+        brightness_range=[0.8, 1.2],
+        # Increase the contrast in images, making features more distinct
+        contrast_stretching=True
+        # -------------------------------------------------------------------
     )
 
     # Train the model with data augmentation
@@ -110,11 +117,11 @@ def train_model(model, X_train, y_train, X_val, y_val):
         # Define the number of steps (batches) to be processed in each epoch
         steps_per_epoch=len(X_train) / batch_size,
         # Specify the number of epochs for training
-        epochs=50,
+        epochs=70,
         # Provide validation data to monitor model performance during training
         validation_data=(X_val, y_val),
         # Specify the callbacks to be used during training
-        callbacks=[checkpoint, early_stopping, reduce_lr, tensorboard_callback],
+        callbacks=[checkpoint, early_stopping, reduce_lr, tensorboard_callback]
     )
 
     # Save the training history using pickle
