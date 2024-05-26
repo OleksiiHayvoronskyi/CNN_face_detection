@@ -20,6 +20,8 @@ from tensorflow.keras.optimizers import Adam
 from matplotlib import pyplot as plt
 # Creating a visual representation of the model's architecture
 from tensorflow.keras.utils import plot_model
+#
+from tensorflow.keras.layers import BatchNormalization
 
 
 # Load the saved numpy arrays
@@ -29,6 +31,7 @@ def load_data():
     data = np.load('data.npy')
     # This array contains the corresponding target labels for the input data
     target = np.load('target.npy')
+
     return data, target
 
 
@@ -39,8 +42,12 @@ def create_cnn_model(input_shape):
 
     # INPUT LAYER:
     # The first convolution CNN layer with 200 filters, each of size (3, 3),
-    # where 1 (into input_shape) represents the number of color channels (gray)
+    # where input_shape represents the number of color channels (gray) of the input images
     model.add(Conv2D(200, (3, 3), input_shape=input_shape))
+    # --------------------------------------------------------
+    # Layer to normalize the activations of the previous layer
+    model.add(BatchNormalization())
+    # --------------------------------------------------------
     # HIDDEN LAYERS:
     # Adding an activation layer.
     model.add(Activation('relu'))
